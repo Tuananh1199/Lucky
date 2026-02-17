@@ -83,7 +83,7 @@
 
         if (currentMode === 'high') {
             // 5 lượt đầu tỷ lệ đều cho các số nhỏ
-            if (globalPicks < 5) {
+            if (globalPicks < 0) {
                 const startValues = [88888, 99999, 123123, 123456, 168168, 168000];
                 return startValues[Math.floor(Math.random() * startValues.length)];
             } 
