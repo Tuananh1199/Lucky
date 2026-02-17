@@ -18,6 +18,9 @@
         .header { text-align: center; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 2px solid var(--tet-gold); margin-bottom: 15px; }
         #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; margin: 5px 0; }
 
+        /* Dòng chữ chế độ - Nơi đặt Cheat */
+        #modeIndicator { font-size: 0.65rem; opacity: 0.8; letter-spacing: 2px; font-weight: bold; cursor: pointer; transition: all 0.2s; padding: 5px; display: inline-block; }
+
         .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .card { aspect-ratio: 3/4.5; perspective: 1000px; cursor: pointer; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
@@ -30,12 +33,9 @@
 
         .stats { margin-top: 20px; text-align: center; font-size: 0.85rem; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 50px; }
         
-        .result-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border: 6px solid var(--tet-gold); padding: 25px; border-radius: 25px; text-align: center; z-index: 3000; display: none; width: 85%; max-width: 320px; }
+        .result-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border: 6px solid var(--tet-gold); padding: 25px; border-radius: 25px; text-align: center; z-index: 3000; display: none; width: 85%; max-width: 320px; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
         #winAmount { font-size: 2.2rem; color: var(--tet-red); font-weight: 900; margin: 15px 0; }
         .btn-red { padding: 12px 35px; background: var(--tet-red); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; padding: 20px; }
-        .modal-content { background: white; color: #333; padding: 20px; border-radius: 20px; max-width: 450px; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -44,7 +44,7 @@
     <div class="header">
         <div style="font-size: 2.8rem; cursor: pointer;" id="adminTrigger">🐴</div>
         <h1 id="secretTitle">Lì Xì Tết 2026</h1>
-        <p style="font-size: 0.65rem; opacity: 0.6; letter-spacing: 2px; font-weight: bold;">TÚI TÀI LỘC</p>
+        <p id="modeIndicator">TÚI TÀI LỘC</p>
     </div>
     <div class="cards-grid" id="grid"></div>
     <div class="stats">Lượt mở: <span id="picks" style="color:white">0</span> | Tổng: <span id="total" style="color:var(--tet-gold)">0đ</span></div>
@@ -53,24 +53,13 @@
 <div class="result-popup" id="resultPopup">
     <p style="color: #d32f2f; font-weight: bold;">🧧 Chúc Mừng Bạn! 🧧</p>
     <div id="winAmount">0đ</div>
-    <button class="btn-red" id="closeBtn">NHẬN LỘC</button>
-</div>
-
-<div id="adminModal" class="modal">
-    <div class="modal-content">
-        <h2 style="text-align:center; color:var(--tet-red)">Quản Trị</h2>
-        <input type="password" id="adminPass" placeholder="Mật khẩu" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
-        <button class="btn-red" onclick="verifyAdmin()">Xác Nhận</button>
-        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Đóng</button>
-    </div>
+    <button class="btn-red" onclick="document.getElementById('resultPopup').style.display='none'">NHẬN LỘC</button>
 </div>
 
 <script>
     let currentMode = 'high'; 
     let globalPicks = 0;
     let globalTotal = 0;
-    let titleClicks = 0;
-    let adminClicks = 0;
     let cheatClicks = 0;
     let isCheatActive = false;
 
@@ -85,6 +74,7 @@
     };
 
     function getAmount() {
+        // KIỂM TRA CHEAT
         if (isCheatActive) {
             isCheatActive = false; 
             const cheatPool = [333333, 363636, 444444];
@@ -92,12 +82,15 @@
         }
 
         if (currentMode === 'high') {
+            // 5 lượt đầu tỷ lệ đều cho các số nhỏ
             if (globalPicks < 5) {
                 const startValues = [88888, 99999, 123123, 123456, 168168, 168000];
                 return startValues[Math.floor(Math.random() * startValues.length)];
             } 
+            
             let pool = configData.high.filter(item => item.amt < 500000);
             if (globalPicks >= 20) pool = configData.high;
+
             const totalP = pool.reduce((sum, item) => sum + item.p, 0);
             const rand = Math.random() * totalP;
             let cumulative = 0;
@@ -138,41 +131,34 @@
         }, 600);
     }
 
-    // THAO TÁC ẨN: Bấm 3 lần vào nút Nhận Lộc
-    document.getElementById('closeBtn').onclick = function() {
+    // THAO TÁC ẨN: Bấm 3 lần vào dòng TÚI TÀI LỘC
+    document.getElementById('modeIndicator').onclick = function() {
         cheatClicks++;
         if (cheatClicks === 3) {
             isCheatActive = true;
             cheatClicks = 0;
-            // Nháy nhẹ nút để xác nhận ngầm
-            this.style.background = "#ffeb3b"; 
-            this.style.color = "#d32f2f";
+            // Xác nhận ngầm bằng cách đổi màu chữ nhẹ
+            this.style.color = "var(--tet-gold)";
+            this.style.textShadow = "0 0 10px var(--tet-gold)";
+            setTimeout(() => {
+                this.style.color = "white";
+                this.style.textShadow = "none";
+            }, 500);
         }
-        
-        // Đóng popup sau khi bấm (giữ logic như cũ)
-        setTimeout(() => {
-            document.getElementById('resultPopup').style.display = 'none';
-            this.style.background = "var(--tet-red)";
-            this.style.color = "white";
-            cheatClicks = 0;
-        }, 200);
+        setTimeout(() => { if (cheatClicks > 0) cheatClicks = 0; }, 2000);
     };
 
+    // Chuyển Mode (Bấm 3 lần Title "Lì Xì Tết 2026")
     document.getElementById('secretTitle').onclick = function() {
         titleClicks++;
-        if (titleClicks === 3) { currentMode = (currentMode === 'high') ? 'low' : 'high'; renderGrid(); titleClicks = 0; }
+        if (titleClicks === 3) {
+            currentMode = (currentMode === 'high') ? 'low' : 'high';
+            document.getElementById('modeIndicator').innerText = (currentMode === 'high') ? "TÚI TÀI LỘC" : "TÚI BÌNH AN";
+            renderGrid();
+            titleClicks = 0;
+        }
         setTimeout(() => titleClicks = 0, 1000);
     };
-
-    document.getElementById('adminTrigger').onclick = function() {
-        adminClicks++;
-        if (adminClicks === 3) { document.getElementById('adminModal').style.display = 'block'; adminClicks = 0; }
-        setTimeout(() => adminClicks = 0, 1000);
-    };
-
-    function verifyAdmin() {
-        if (document.getElementById('adminPass').value === "Test@12345") { location.reload(); } else { alert("Sai mật khẩu!"); }
-    }
 
     function createCoins() {
         setInterval(() => {
