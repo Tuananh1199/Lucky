@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Lì Xì Tết 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff4444 0%, #ffdd00 50%, #ff4444 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #d32f2f;
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .horse-icon {
+            font-size: 3em;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b, #d32f2f);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #d32f2f;
+        }
+
+        /* Card styles */
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 140px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 3px solid gold;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+        }
+
+        .card-front .icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #fff, #ffe5e5);
+            transform: rotateY(180deg);
+        }
+
+        .card-amount {
+            font-size: 1.8em;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .result-display {
+            text-align: center;
+            margin: 30px 0;
+            min-height: 100px;
+        }
+
+        .result-amount {
+            font-size: 3.5em;
+            color: #d32f2f;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #d32f2f;
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 30px auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #d32f2f;
+        }
+
+        .modal h2 {
+            color: #d32f2f;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .value-list {
+            margin-top: 20px;
+        }
+
+        .value-item {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-item input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .add-value-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .remove-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .password-section {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .password-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #d32f2f;
+            border-bottom-color: #d32f2f;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .preset-btn {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 2px solid #1976d2;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        .history-item {
+            background: #fff3e0;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border-left: 5px solid #ff6b6b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-amount {
+            font-size: 1.2em;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 110px;
+                height: 160px;
+            }
+            
+            .card-amount {
+                font-size: 1.4em;
+            }
+            
+            .result-amount {
+                font-size: 2.5em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="horse-icon" onclick="handleHorseClick()">🐴</div>
+            <h1>🧧 Lì Xì Tết Bính Ngọ 2026 🧧</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="controls">
+                <button class="btn btn-gold" onclick="resetCards()">🎲 Chọn Lại</button>
+                <button class="btn" onclick="clearHistory()">🗑️ Xóa Lịch Sử</button>
+                <!-- Hidden settings trigger: triple click on horse -->
+            </div>
+
+            <div class="cards-container" id="cardsContainer"></div>
+
+            <div class="result-display">
+                <div class="result-amount" id="resultAmount">Chọn một thẻ bài!</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalPicks">0</div>
+                    <div class="stat-label">Số lần</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalAmount">0đ</div>
+                    <div class="stat-label">Tổng</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgAmount">0đ</div>
+                    <div class="stat-label">Trung bình</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="maxAmount">0đ</div>
+                    <div class="stat-label">Cao nhất</div>
+                </div>
+            </div>
+
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <h2>⚙️ Cài Đặt</h2>
+            
+            <!-- Password Section -->
+            <div id="passwordSection" class="password-section">
+                <p style="color: #666; margin-bottom: 15px;">🔒 Nhập mật khẩu để truy cập cài đặt</p>
+                <input type="password" id="passwordInput" class="password-input" placeholder="Nhập mật khẩu">
+                <button class="btn btn-gold" style="margin-top: 15px;" onclick="checkPassword()">Xác nhận</button>
+            </div>
+
+            <!-- Settings Content (Hidden initially) -->
+            <div id="settingsContent" style="display: none;">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('basic')">Cơ bản</button>
+                    <button class="tab" onclick="switchTab('advanced')">Nâng cao</button>
+                </div>
+
+                <!-- Basic Tab -->
+                <div id="basicTab" class="tab-content active">
+                    <div class="form-group">
+                        <label>🎴 Số lượng thẻ bài:</label>
+                        <input type="number" id="numCards" value="5" min="3" max="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label>💰 Chọn mức độ rủi ro:</label>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="applyPreset('safe')">🛡️ An toàn</button>
+                            <button class="preset-btn" onclick="applyPreset('balanced')">⚖️ Cân bằng</button>
+                            <button class="preset-btn" onclick="applyPreset('risky')">🎲 Mạo hiểm</button>
+                        </div>
+                    </div>
+
+                    <div id="presetInfo" style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                        <p style="color: #1976d2; font-size: 0.95em; margin: 0;">Chọn một mức độ để tự động cài đặt mệnh giá và tỷ lệ phù hợp</p>
+                    </div>
+                </div>
+
+                <!-- Advanced Tab -->
+                <div id="advancedTab" class="tab-content">
+                    <div class="value-list">
+                        <h3>💰 Mệnh giá & Tỷ lệ xuất hiện (%)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Tổng tỷ lệ phải bằng 100%</p>
+                        <div id="valuesList"></div>
+                        <button class="add-value-btn" onclick="addValue()">+ Thêm mệnh giá</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-gold" style="width: 100%; margin-top: 20px;" onclick="saveSettings()">💾 Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PASSWORD = "Test@12345";
+        let isAuthenticated = false;
+        let horseClickCount = 0;
+        let horseClickTimer = null;
+
+        // Handle hidden settings access via triple click on horse
+        function handleHorseClick() {
+            horseClickCount++;
+            
+            if (horseClickTimer) {
+                clearTimeout(horseClickTimer);
+            }
+            
+            if (horseClickCount >= 3) {
+                openSettings();
+                horseClickCount = 0;
+            }
+            
+            horseClickTimer = setTimeout(() => {
+                horseClickCount = 0;
+            }, 800);
+        }
+
+        // Lucky numbers patterns
+        const LUCKY_PATTERNS = [
+            // Numbers ending in multiple zeros
+            { pattern: 'zeros', multipliers: [1000, 5000, 10000, 20000, 50000, 100000, 200000, 500000] },
+            // Repeating digits
+            { pattern: 'repeating', examples: [88000, 99000, 66000, 77000, 188000, 288000, 388000, 488000, 588000, 688000, 788000, 888000, 988000] },
+            // Sequential lucky
+            { pattern: 'sequential', examples: [123000, 234000, 456000, 678000] }
+        ];
+
+        function makeLuckyNumber(baseAmount) {
+            // Round to nearest beautiful number
+            if (baseAmount < 10000) {
+                return Math.round(baseAmount / 1000) * 1000; // Round to thousands
+            } else if (baseAmount < 100000) {
+                // Check if we can make repeating digits
+                const tens = Math.floor(baseAmount / 10000);
+                if (Math.random() > 0.6) {
+                    // Create repeating pattern like 88,000 or 66,000
+                    const luckyDigit = [6, 7, 8, 9][Math.floor(Math.random() * 4)];
+                    return luckyDigit * 10000 + Math.floor(Math.random() * 10) * 1000;
+                }
+                return Math.round(baseAmount / 5000) * 5000; // Round to 5k
+            } else if (baseAmount < 500000) {
+                // For larger amounts, prefer round numbers
+                if (Math.random() > 0.5) {
+                    // Try for repeating patterns like 188,000, 288,000
+                    const hundred = Math.floor(baseAmount / 100000);
+                    const luckyDigit = [8, 9][Math.floor(Math.random() * 2)];
+                    return hundred * 100000 + luckyDigit * 10000 + (Math.random() > 0.5 ? luckyDigit : 0) * 1000;
+                }
+                return Math.round(baseAmount / 10000) * 10000; // Round to 10k
+            } else {
+                return Math.round(baseAmount / 50000) * 50000; // Round to 50k
+            }
+        }
+
+        // Preset configurations
+        const PRESETS = {
+            safe: {
+                name: "An toàn",
+                values: [
+                    { amount: 20000, probability: 40 },
+                    { amount: 50000, probability: 35 },
+                    { amount: 100000, probability: 20 },
+                    { amount: 200000, probability: 5 }
+                ]
+            },
+            balanced: {
+                name: "Cân bằng",
+                values: [
+                    { amount: 10000, probability: 30 },
+                    { amount: 20000, probability: 25 },
+                    { amount: 50000, probability: 20 },
+                    { amount: 100000, probability: 15 },
+                    { amount: 200000, probability: 7 },
+                    { amount: 500000, probability: 3 }
+                ]
+            },
+            risky: {
+                name: "Mạo hiểm",
+                values: [
+                    { amount: 5000, probability: 35 },
+                    { amount: 10000, probability: 25 },
+                    { amount: 50000, probability: 20 },
+                    { amount: 100000, probability: 10 },
+                    { amount: 500000, probability: 7 },
+                    { amount: 1000000, probability: 3 }
+                ]
+            }
+        };
+
+        // Default settings
+        function getDefaultSettings() {
+            return {
+                numCards: 5,
+                values: PRESETS.balanced.values,
+                preset: 'balanced'
+            };
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('lixiSettings');
+            return saved ? JSON.parse(saved) : getDefaultSettings();
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === PASSWORD) {
+                isAuthenticated = true;
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('settingsContent').style.display = 'block';
+                
+                // Load current settings
+                const settings = loadSettings();
+                document.getElementById('numCards').value = settings.numCards;
+                if (settings.values) {
+                    renderValuesList(settings.values);
+                }
+            } else {
+                alert('❌ Mật khẩu không đúng!');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (tab === 'basic') {
+                document.getElementById('basicTab').classList.add('active');
+            } else {
+                document.getElementById('advancedTab').classList.add('active');
+                const settings = loadSettings();
+                renderValuesList(settings.values);
+            }
+        }
+
+        function applyPreset(presetName) {
+            const preset = PRESETS[presetName];
+            const settings = loadSettings();
+            settings.values = preset.values;
+            settings.preset = presetName;
+            
+            document.getElementById('presetInfo').innerHTML = `
+                <p style="color: #1976d2; font-size: 0.95em; margin: 0;">
+                    ✅ Đã chọn mức độ: <strong>${preset.name}</strong><br>
+                    Mệnh giá: ${preset.values.map(v => formatMoney(v.amount)).join(', ')}
+                </p>
+            `;
+
+            // Update advanced tab if needed
+            renderValuesList(settings.values);
+        }
+
+        function saveSettings() {
+            const numCards = parseInt(document.getElementById('numCards').value);
+            const settings = loadSettings();
+            
+            // Check which tab is active
+            const isAdvancedActive = document.getElementById('advancedTab').classList.contains('active');
+            
+            if (isAdvancedActive) {
+                // Advanced mode: get values from form
+                const valueItems = document.querySelectorAll('.value-item');
+                const values = [];
+                let totalProb = 0;
+
+                valueItems.forEach(item => {
+                    const amount = parseInt(item.querySelector('.amount-input').value);
+                    const prob = parseInt(item.querySelector('.prob-input').value);
+                    if (amount > 0 && prob > 0) {
+                        values.push({ amount, probability: prob });
+                        totalProb += prob;
+                    }
+                });
+
+                if (values.length === 0) {
+                    alert('Cần có ít nhất 1 mệnh giá!');
+                    return;
+                }
+
+                if (totalProb !== 100) {
+                    alert(`Tổng tỷ lệ phải bằng 100%! (Hiện tại: ${totalProb}%)`);
+                    return;
+                }
+
+                settings.values = values;
+                settings.preset = 'custom';
+            }
+            // If basic mode, values are already set by applyPreset
+
+            settings.numCards = numCards;
+            localStorage.setItem('lixiSettings', JSON.stringify(settings));
+            closeSettings();
+            resetCards();
+            alert('✅ Đã lưu cài đặt!');
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'block';
+            
+            // Reset authentication state when opening
+            if (!isAuthenticated) {
+                document.getElementById('passwordSection').style.display = 'block';
+                document.getElementById('settingsContent').style.display = 'none';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            } else {
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('settingsContent').style.display = 'block';
+            }
+
+            const settings = loadSettings();
+            document.getElementById('numCards').value = settings.numCards;
+            
+            // Update preset info if in basic mode
+            if (settings.preset && PRESETS[settings.preset]) {
+                const preset = PRESETS[settings.preset];
+                document.getElementById('presetInfo').innerHTML = `
+                    <p style="color: #1976d2; font-size: 0.95em; margin: 0;">
+                        ✅ Đang sử dụng: <strong>${preset.name}</strong><br>
+                        Mệnh giá: ${settings.values.map(v => formatMoney(v.amount)).join(', ')}
+                    </p>
+                `;
+            }
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function renderValuesList(values) {
+            const container = document.getElementById('valuesList');
+            container.innerHTML = values.map((v, idx) => `
+                <div class="value-item">
+                    <div>
+                        <input type="number" class="amount-input" value="${v.amount}" min="1000" step="1000" style="width: 120px;">
+                        <span style="margin: 0 10px;">VNĐ</span>
+                    </div>
+                    <div>
+                        <input type="number" class="prob-input" value="${v.probability}" min="1" max="100">
+                        <span style="margin: 0 10px;">%</span>
+                        <button class="remove-btn" onclick="removeValue(${idx})">Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addValue() {
+            const settings = loadSettings();
+            settings.values.push({ amount: 10000, probability: 10 });
+            renderValuesList(settings.values);
+        }
+
+        function removeValue(index) {
+            const settings = loadSettings();
+            settings.values.splice(index, 1);
+            renderValuesList(settings.values);
+        }
+
+        function formatMoney(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+        }
+
+        function getRandomAmount() {
+            const settings = loadSettings();
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+            let baseAmount;
+
+            for (const value of settings.values) {
+                cumulative += value.probability;
+                if (rand <= cumulative) {
+                    baseAmount = value.amount;
+                    break;
+                }
+            }
+
+            if (!baseAmount) {
+                baseAmount = settings.values[settings.values.length - 1].amount;
+            }
+
+            // Add some variance (±20%) then make it lucky
+            const variance = baseAmount * 0.2;
+            const varied = baseAmount + (Math.random() * variance * 2 - variance);
+            
+            return makeLuckyNumber(varied);
+        }
+
+        function createCards() {
+            const settings = loadSettings();
+            const container = document.getElementById('cardsContainer');
+            const amounts = [];
+
+            for (let i = 0; i < settings.numCards; i++) {
+                amounts.push(getRandomAmount());
+            }
+
+            container.innerHTML = amounts.map((amount, idx) => `
+                <div class="card" onclick="flipCard(${idx}, ${amount})">
+                    <div class="card-face card-front">
+                        <div class="icon">🐴</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div style="font-size: 2em;">🧧</div>
+                        <div class="card-amount">${formatMoney(amount)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function flipCard(index, amount) {
+            const cards = document.querySelectorAll('.card');
+            const card = cards[index];
+
+            if (card.classList.contains('flipped')) return;
+
+            card.classList.add('flipped');
+            
+            setTimeout(() => {
+                document.getElementById('resultAmount').textContent = formatMoney(amount);
+                saveToHistory(amount);
+                updateStats();
+            }, 300);
+        }
+
+        function resetCards() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.remove('flipped'));
+            
+            setTimeout(() => {
+                createCards();
+                document.getElementById('resultAmount').textContent = 'Chọn một thẻ bài!';
+            }, 300);
+        }
+
+        function saveToHistory(amount) {
+            const history = JSON.parse(localStorage.getItem('lixiHistory')) || [];
+            history.unshift({
+                amount,
+                timestamp: new Date().toLocaleString('vi-VN')
+            });
+
+            if (history.length > 50) history.pop();
+
+            localStorage.setItem('lixiHistory', JSON.stringify(history));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const history = JSON.parse(localStorage.getItem('lixiHistory')) || [];
+            const container = document.getElementById('historyList');
+
+            if (history.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const recent = history.slice(0, 10);
+            container.innerHTML = '<h3 style="color: #d32f2f; margin: 20px 0;">📜 Lịch sử</h3>' +
+                recent.map(entry => `
+                    <div class="history-item">
+                        <div class="history-amount">${formatMoney(entry.amount)}</div>
+                        <div style="font-size: 0.85em; color: #666;">${entry.timestamp}</div>
+                    </div>
+                `).join('');
+        }
+
+        function updateStats() {
+            const history = JSON.parse(localStorage.getItem('lixiHistory')) || [];
+
+            if (history.length === 0) {
+                document.getElementById('totalPicks').textContent = '0';
+                document.getElementById('totalAmount').textContent = '0đ';
+                document.getElementById('avgAmount').textContent = '0đ';
+                document.getElementById('maxAmount').textContent = '0đ';
+                return;
+            }
+
+            const amounts = history.map(h => h.amount);
+            const total = amounts.reduce((a, b) => a + b, 0);
+            const avg = Math.round(total / amounts.length);
+            const max = Math.max(...amounts);
+
+            document.getElementById('totalPicks').textContent = history.length;
+            document.getElementById('totalAmount').textContent = formatMoney(total);
+            document.getElementById('avgAmount').textContent = formatMoney(avg);
+            document.getElementById('maxAmount').textContent = formatMoney(max);
+        }
+
+        function clearHistory() {
+            if (confirm('Xóa toàn bộ lịch sử?')) {
+                localStorage.removeItem('lixiHistory');
+                displayHistory();
+                updateStats();
+                alert('✅ Đã xóa!');
+            }
+        }
+
+        // Allow Enter key for password
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('settingsModal')) {
+                closeSettings();
+            }
+        }
+
+        window.onload = function() {
+            createCards();
+            displayHistory();
+            updateStats();
+        }
+    </script>
+</body>
+</html>
