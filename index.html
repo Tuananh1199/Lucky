@@ -18,7 +18,6 @@
             padding-bottom: 50px; 
         }
         
-        /* Hiệu ứng tiền rơi */
         .coin { position: fixed; top: -50px; font-size: 18px; z-index: 0; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
@@ -69,14 +68,10 @@
             border: none; border-radius: 50px; font-weight: 700; cursor: pointer; 
             width: 100%; margin-top: 10px; box-shadow: 0 4px 0 #8e0000;
         }
-        .btn-red:active { transform: translateY(2px); box-shadow: none; }
 
-        /* Admin Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; overflow-y: auto; padding: 20px; }
+        /* Admin */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; padding: 20px; }
         .modal-content { background: white; color: #333; padding: 20px; border-radius: 20px; max-width: 450px; margin: 0 auto; }
-        .config-row { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
-        .config-row input { padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 13px; }
-        label { font-size: 12px; font-weight: bold; margin-top: 10px; display: block; color: var(--tet-red); }
     </style>
 </head>
 <body>
@@ -90,31 +85,22 @@
     <div class="cards-grid" id="grid"></div>
     <div class="stats">
         Lượt mở: <span id="picks" style="color:white">0</span> | 
-        Tổng tiền: <span id="total" style="color:var(--tet-gold)">0đ</span>
+        Tổng: <span id="total" style="color:var(--tet-gold)">0đ</span>
     </div>
 </div>
 
 <div class="result-popup" id="resultPopup">
-    <p style="color: #d32f2f; font-weight: bold; font-size: 1.2rem;">🧧 Chúc Mừng! 🧧</p>
+    <p style="color: #d32f2f; font-weight: bold;">🧧 Chúc Mừng! 🧧</p>
     <div id="winAmount">0đ</div>
     <button class="btn-red" onclick="closePopup()">NHẬN LỘC</button>
 </div>
 
 <div id="adminModal" class="modal">
     <div class="modal-content">
-        <h2 style="text-align:center; color:var(--tet-red)">Cài Đặt Lì Xì</h2>
-        <div id="passArea">
-            <input type="password" id="adminPass" placeholder="Mật khẩu: Test@12345" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
-            <button class="btn-red" onclick="verifyAdmin()">Vào Quản Trị</button>
-        </div>
-        <div id="settingsArea" style="display:none">
-            <label>Chế độ: <span id="activeModeText" style="color:blue">HIGH</span></label>
-            <p style="font-size: 11px; color: #666; margin-bottom: 10px;">(Tự động lọc mệnh giá theo số lượt mở)</p>
-            <div id="itemsList" style="max-height: 300px; overflow-y: auto; margin: 10px 0; border: 1px inset #eee; padding: 10px;"></div>
-            <button onclick="addItem()" style="font-size:12px; padding:5px; margin-bottom:10px; cursor:pointer">+ Thêm mệnh giá</button>
-            <button class="btn-red" onclick="saveConfig()">Lưu Cấu Hình & Reset</button>
-            <button class="btn-red" style="background:#666; box-shadow: 0 4px 0 #333;" onclick="document.getElementById('adminModal').style.display='none'">Đóng</button>
-        </div>
+        <h2 style="text-align:center; color:var(--tet-red)">Quản Trị</h2>
+        <input type="password" id="adminPass" placeholder="Mật khẩu" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
+        <button class="btn-red" onclick="verifyAdmin()">Vào Hệ Thống</button>
+        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Đóng</button>
     </div>
 </div>
 
@@ -125,50 +111,41 @@
     let titleClicks = 0;
     let adminClicks = 0;
 
-    // Cấu hình dữ liệu
+    // Cấu hình chính
     let configData = {
         low: [
-            {amt: 11111, p: 20}, {amt: 22222, p: 20}, {amt: 33333, p: 20}, 
-            {amt: 55555, p: 20}, {amt: 68686, p: 20}
+            {amt: 11111, p: 20}, {amt: 22222, p: 20}, {amt: 33333, p: 20}, {amt: 55555, p: 20}, {amt: 68686, p: 20}
         ],
         high: [
-            {amt: 123123, p: 25}, // Xuất hiện nhiều nhất
-            {amt: 168168, p: 20}, // Xuất hiện nhiều nhì
+            // Các giá trị bắt buộc 5 lượt đầu
+            {amt: 99999, p: 10}, 
+            {amt: 123123, p: 25}, 
             {amt: 123456, p: 10}, 
-            {amt: 222222, p: 15}, 
-            {amt: 333333, p: 10}, // > 250k (Mở sau 5 lượt)
-            {amt: 456456, p: 10}, // > 250k (Mở sau 5 lượt)
-            {amt: 555555, p: 10}  // Jackpot (Mở sau 20 lượt)
+            {amt: 168168, p: 20}, 
+            {amt: 168000, p: 5},
+            // Các giá trị mở sau
+            {amt: 222222, p: 10},
+            {amt: 333333, p: 10}, // Mở sau 5 lượt
+            {amt: 456456, p: 5},  // Mở sau 5 lượt
+            {amt: 555555, p: 5}   // Mở sau 20 lượt
         ]
     };
-
-    function createCoins() {
-        setInterval(() => {
-            const coin = document.createElement('div');
-            coin.className = 'coin'; coin.innerHTML = '🪙';
-            coin.style.left = Math.random() * 100 + 'vw';
-            coin.style.animationDuration = Math.random() * 3 + 2 + 's';
-            document.body.appendChild(coin);
-            setTimeout(() => coin.remove(), 5000);
-        }, 600);
-    }
 
     function getAmount() {
         let pool = [...configData[currentMode]];
         
-        // LOGIC CHẶN THEO LƯỢT (Chỉ áp dụng cho chế độ HIGH)
         if (currentMode === 'high') {
             if (globalPicks < 5) {
-                // Dưới 5 lượt: Không xuất hiện số > 250,000
-                pool = pool.filter(item => item.amt < 250000);
+                // CHỈ cho phép nhận 5 giá trị này trong 5 lượt đầu
+                const startValues = [99999, 123123, 123456, 168168, 168000];
+                pool = pool.filter(item => startValues.includes(item.amt));
             } else if (globalPicks < 20) {
-                // Từ lượt 5 đến 19: Xuất hiện số > 250k nhưng chưa có 555,555
+                // Từ lượt 5 - 19: Xuất hiện thêm các số > 250k, nhưng chưa có 555,555
                 pool = pool.filter(item => item.amt < 500000);
             }
-            // Từ lượt 20 trở đi: Mở khóa toàn bộ bao gồm 555,555
+            // Sau 20 lượt: Xuất hiện tất cả bao gồm 555,555
         }
 
-        // Tính toán tỷ lệ dựa trên pool đã lọc
         const totalP = pool.reduce((sum, item) => sum + item.p, 0);
         const rand = Math.random() * totalP;
         let cumulative = 0;
@@ -218,89 +195,47 @@
         setTimeout(() => {
             document.getElementById('winAmount').innerText = amt.toLocaleString() + 'đ';
             document.getElementById('resultPopup').style.display = 'block';
-            confetti({ 
-                particleCount: 150, 
-                spread: 70, 
-                origin: { y: 0.6 }, 
-                colors: ['#ffeb3b', '#d32f2f', '#ffffff'] 
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffeb3b', '#d32f2f'] });
         }, 600);
     }
 
     function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
 
-    // Đổi mode bằng cách bấm 3 lần vào Title
+    // Click 3 lần Title để đổi Mode
     document.getElementById('secretTitle').onclick = function() {
         titleClicks++;
         if (titleClicks === 3) {
             currentMode = (currentMode === 'high') ? 'low' : 'high';
             renderGrid();
             titleClicks = 0;
-            alert("Đã chuyển sang: " + (currentMode === 'high' ? "Túi Tài Lộc" : "Túi Bình An"));
+            alert("Đổi sang: " + currentMode.toUpperCase());
         }
         setTimeout(() => titleClicks = 0, 1000);
     };
 
-    // Mở admin bằng cách bấm 3 lần vào icon Ngựa
+    // Click 3 lần icon Ngựa để mở Admin
     document.getElementById('adminTrigger').onclick = function() {
         adminClicks++;
-        if (adminClicks === 3) { 
-            document.getElementById('adminModal').style.display = 'block'; 
-            adminClicks = 0; 
-        }
+        if (adminClicks === 3) { document.getElementById('adminModal').style.display = 'block'; adminClicks = 0; }
         setTimeout(() => adminClicks = 0, 1000);
     };
 
     function verifyAdmin() {
         if (document.getElementById('adminPass').value === "Test@12345") {
-            document.getElementById('passArea').style.display = 'none';
-            document.getElementById('settingsArea').style.display = 'block';
-            loadSettingsToUI();
+            alert("Xác thực thành công! Bạn có thể xem log hoặc reset.");
+            location.reload(); 
         } else { alert("Sai mật khẩu!"); }
     }
 
-    function loadSettingsToUI() {
-        const list = document.getElementById('itemsList');
-        document.getElementById('activeModeText').innerText = currentMode.toUpperCase();
-        list.innerHTML = '';
-        configData[currentMode].forEach((item) => addItemUI(item.amt, item.p));
-    }
-
-    function addItemUI(amt = 10000, p = 10) {
-        const div = document.createElement('div');
-        div.className = 'config-row';
-        div.innerHTML = `
-            <input type="number" class="in-amt" value="${amt}" style="flex:2">
-            <input type="number" class="in-p" value="${p}" style="flex:1">
-            <button onclick="this.parentElement.remove()" style="color:red; border:none; background:none; font-weight:bold; cursor:pointer">X</button>
-        `;
-        document.getElementById('itemsList').appendChild(div);
-    }
-
-    function addItem() { addItemUI(); }
-
-    function saveConfig() {
-        const ampts = document.querySelectorAll('.in-amt');
-        const probs = document.querySelectorAll('.in-p');
-        let newItems = [];
-        let totalP = 0;
-
-        ampts.forEach((el, i) => {
-            const a = parseInt(el.value);
-            const p = parseFloat(probs[i].value);
-            newItems.push({amt: a, p: p});
-            totalP += p;
-        });
-
-        if (Math.abs(totalP - 100) > 0.1) {
-            alert("Lỗi: Tổng tỷ lệ phải bằng 100%. Hiện tại: " + totalP + "%");
-            return;
-        }
-
-        configData[currentMode] = newItems;
-        alert("Đã lưu cấu hình mới!");
-        document.getElementById('adminModal').style.display = 'none';
-        renderGrid();
+    function createCoins() {
+        setInterval(() => {
+            const coin = document.createElement('div');
+            coin.className = 'coin'; coin.innerHTML = '🪙';
+            coin.style.left = Math.random() * 100 + 'vw';
+            coin.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(coin);
+            setTimeout(() => coin.remove(), 5000);
+        }, 600);
     }
 
     window.onload = () => { createCoins(); renderGrid(); };
