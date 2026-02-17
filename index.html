@@ -3,112 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lì Xì Cute 2026 🧧 Bính Ngọ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <title>Lì Xì Tết Bính Ngọ 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --cute-pink: #ff6b81;
-            --cute-red: #ee5253;
-            --cute-yellow: #feca57;
-            --bg-soft: #fff5f5;
+            --tet-red: #d32f2f;
+            --tet-gold: #ffeb3b;
+            --dark-red: #8e0000;
+            --gold-metallic: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Comfortaa', cursive;
-            background-color: var(--bg-soft);
-            background-image: radial-gradient(#ffcfd2 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: #444;
-            padding: 10px;
+            font-family: 'Lexend', sans-serif;
+            background: var(--dark-red);
+            color: var(--tet-gold);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Hiệu ứng Tiền rơi (Coins Rain) */
+        .coin {
+            position: fixed;
+            top: -50px;
+            font-size: 20px;
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            padding: 15px;
         }
 
-        /* Header Cute */
+        /* Header */
         .header {
             text-align: center;
-            padding: 30px 15px;
-            background: white;
-            border-radius: 40px;
-            box-shadow: 0 10px 0 #fbdbdb;
-            margin-bottom: 30px;
-            border: 4px solid var(--cute-pink);
+            padding: 25px;
+            background: rgba(211, 47, 47, 0.9);
+            border-radius: 20px;
+            border: 3px solid var(--tet-gold);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .header h1 {
             font-family: 'Pacifico', cursive;
-            color: var(--cute-red);
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2.2em;
+            color: var(--tet-gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .horse-icon {
             font-size: 4em;
             display: inline-block;
-            animation: bounce 2s infinite;
             cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.1); }
-        }
+        .horse-icon:active { transform: scale(0.9); }
 
-        /* Section Tabs */
-        .section-title {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--cute-pink);
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
+        /* Controls */
         .btn-group {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .category-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 20px;
-            font-family: inherit;
+            padding: 12px 20px;
+            border: 2px solid var(--tet-gold);
+            border-radius: 12px;
+            background: var(--tet-red);
+            color: var(--tet-gold);
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 5px 0 #ddd;
         }
 
-        .btn-small { background: #ff9ff3; color: white; box-shadow: 0 5px 0 #e082d8; }
-        .btn-big { background: #feca57; color: white; box-shadow: 0 5px 0 #e6b033; }
-        .category-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #999; }
+        .category-btn:hover { background: var(--tet-gold); color: var(--tet-red); }
 
-        /* Lì xì Grid */
+        /* Grid Lì Xì */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 15px;
-            padding: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
         }
 
-        /* Responsive cho Mobile: Hiện 4 cột */
-        @media (max-width: 480px) {
-            .cards-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 8px;
-            }
-            .header h1 { font-size: 1.8em; }
+        @media (max-width: 600px) {
+            .cards-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+            .header h1 { font-size: 1.5em; }
         }
 
         .card {
@@ -120,7 +117,7 @@
         .card-inner {
             position: relative;
             width: 100%; height: 100%;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.6s;
             transform-style: preserve-3d;
         }
 
@@ -130,197 +127,252 @@
             position: absolute;
             width: 100%; height: 100%;
             backface-visibility: hidden;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid white;
+            border: 1px solid var(--tet-gold);
         }
 
         .card-front {
-            background: linear-gradient(135deg, #ff6b6b, #ee5253);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .card-front::after {
-            content: "🧧";
+            background: var(--tet-red);
             font-size: 2em;
         }
 
         .card-back {
-            background: white;
-            color: var(--cute-red);
+            background: var(--tet-gold);
+            color: var(--tet-red);
             transform: rotateY(180deg);
-            font-size: 0.7em;
             font-weight: bold;
+            font-size: 0.7em;
             text-align: center;
-            padding: 5px;
         }
 
-        /* Modal kết quả */
-        .result-overlay {
+        /* Modal Settings */
+        .modal {
+            display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        .result-box {
+        .modal-content {
             background: white;
-            padding: 40px;
-            border-radius: 30px;
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; font-size: 0.8em; font-weight: bold; }
+        .input-group input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+
+        /* Stats */
+        .stats {
+            margin-top: 20px;
             text-align: center;
-            border: 8px solid var(--cute-yellow);
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.9em;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 10px;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .result-box h2 { color: var(--cute-pink); margin-bottom: 10px; }
-        .result-box .amount { font-size: 2.5em; color: var(--cute-red); font-weight: 900; margin: 15px 0; }
-
-        .stats-bar {
-            background: white;
-            padding: 15px;
+        .result-popup {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--tet-red);
+            border: 5px solid var(--tet-gold);
+            padding: 30px;
             border-radius: 20px;
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 0.8em;
-            font-weight: bold;
+            text-align: center;
+            z-index: 3000;
+            display: none;
+            animation: zoomIn 0.3s forwards;
         }
 
-        .hidden-trigger { opacity: 0; position: fixed; bottom: 0; right: 0; width: 50px; height: 50px; }
+        @keyframes zoomIn { from {transform: translate(-50%, -50%) scale(0.5); opacity: 0;} }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div class="horse-icon">🐴</div>
-        <h1>Lì Xì Bé Ngoan</h1>
-        <p>Chọn một chiếc bao lì xì xinh xắn nhé! ✨</p>
+        <div class="horse-icon" id="horseBtn">🐴</div>
+        <h1>Lì Xì Tết Bính Ngọ</h1>
+        <p style="font-size: 0.9em; opacity: 0.9;">Chúc Mừng Năm Mới - Vạn Sự Như Ý</p>
     </div>
 
     <div class="btn-group">
-        <button class="category-btn btn-small" onclick="generatePack('small')">🌸 Lấy May (100 bao)</button>
-        <button class="category-btn btn-big" onclick="generatePack('big')">🌟 May Mắn (100 bao)</button>
+        <button class="category-btn" onclick="initGame('takeLuck')">🧧 Lì Xì Lấy May</button>
+        <button class="category-btn" onclick="initGame('lucky')">✨ Lì Xì May Mắn</button>
     </div>
 
-    <div class="section-title" id="currentType">Đang hiển thị: Bao Lì Xì Lấy May</div>
+    <div id="gameStatus" style="text-align: center; margin-bottom: 10px; font-weight: bold;"></div>
 
-    <div class="cards-grid" id="grid">
-        </div>
+    <div class="cards-grid" id="grid"></div>
 
-    <div class="stats-bar">
-        <div>🌸 Lượt: <span id="count">0</span></div>
-        <div>💰 Tổng: <span id="total">0đ</span></div>
+    <div class="stats">
+        Lượt mở: <span id="picks">0</span> | Tổng tiền: <span id="total">0đ</span>
     </div>
 </div>
 
-<div class="result-overlay" id="resultOverlay" onclick="closeResult()">
-    <div class="result-box">
-        <h2>Chúc Mừng Bạn! 🧧</h2>
-        <p>Bạn đã nhận được</p>
-        <div class="amount" id="winAmount">0đ</div>
-        <button class="category-btn btn-small">Tuyệt vời!</button>
+<div class="result-popup" id="resultPopup">
+    <h2 style="color: var(--tet-gold);">Chúc Mừng!</h2>
+    <div id="winAmount" style="font-size: 2em; margin: 20px 0; font-weight: 900; color: white;"></div>
+    <button class="category-btn" onclick="closePopup()">Nhận lộc</button>
+</div>
+
+<div class="modal" id="adminModal">
+    <div class="modal-content">
+        <h3>Cài đặt tỷ lệ ẩn</h3>
+        <div id="adminPassArea">
+            <input type="password" id="adminPass" placeholder="Mật khẩu..." style="width:100%; padding:10px; margin:10px 0;">
+            <button class="category-btn" onclick="verifyPass()" style="width: 100%;">Truy cập</button>
+        </div>
+        <div id="adminControls" style="display:none;">
+            <p style="font-size: 11px; margin-bottom: 10px;">Thay đổi các mệnh giá (cách nhau bởi dấu phẩy):</p>
+            <div class="input-group">
+                <label>Mệnh giá Lấy May:</label>
+                <input type="text" id="customTakeLuck" value="10000, 20000, 50000, 100000">
+            </div>
+            <div class="input-group">
+                <label>Mệnh giá May Mắn:</label>
+                <input type="text" id="customLucky" value="88888, 168168, 200000, 333333, 555555">
+            </div>
+            <button class="category-btn" onclick="saveSettings()" style="width: 100%;">Lưu & Đóng</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let totalMoney = 0;
-    let totalPicks = 0;
+    let globalPicks = 0;
+    let globalTotal = 0;
+    let clickCount = 0;
+    let clickTimer;
 
-    // Danh sách số đẹp
-    const luckyLucky = [10000, 12000, 16000, 18000, 26000, 28000, 36000, 39000, 52000, 68000, 79000, 86000, 88000, 99000, 100000];
-    const superLucky = [88888, 99999, 123456, 168168, 188888, 222222, 262626, 282828, 333333, 363636];
+    // Config mặc định
+    let config = {
+        takeLuck: [10000, 20000, 50000, 68000, 79000, 88000, 100000],
+        lucky: [88888, 123456, 168168, 222222, 250000, 333333, 555555]
+    };
 
-    function generateAmount(type) {
-        if (type === 'small') {
-            // Tỷ lệ: 80% dưới 50k, 20% từ 50k-100k
-            if (Math.random() > 0.2) {
-                let lowValues = luckyLucky.filter(v => v <= 50000);
-                return lowValues[Math.floor(Math.random() * lowValues.length)];
-            } else {
-                let highValues = luckyLucky.filter(v => v > 50000);
-                return highValues[Math.floor(Math.random() * highValues.length)];
-            }
-        } else {
-            // Tỷ lệ cho túi to: Càng lớn tỷ lệ càng ít
-            let rand = Math.random();
-            if (rand < 0.6) return superLucky[0]; // 88k
-            if (rand < 0.8) return superLucky[1]; // 99k
-            if (rand < 0.9) return superLucky[Math.floor(Math.random() * 3) + 2]; // 123k - 188k
-            return superLucky[Math.floor(Math.random() * superLucky.length)]; // Random all
-        }
+    // Tạo tiền vàng rơi
+    function createCoins() {
+        setInterval(() => {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.innerHTML = '🪙';
+            coin.style.left = Math.random() * 100 + 'vw';
+            coin.style.animationDuration = Math.random() * 3 + 2 + 's';
+            coin.style.opacity = Math.random();
+            document.body.appendChild(coin);
+            setTimeout(() => coin.remove(), 5000);
+        }, 300);
     }
 
-    function generatePack(type) {
+    // Logic ẩn mệnh giá
+    function getLuckyAmount(mode) {
+        let pool = [...config[mode]];
+        
+        // Filter logic ẩn
+        if (globalPicks < 5) {
+            pool = pool.filter(v => v <= 250000);
+        } else if (globalPicks < 30) {
+            pool = pool.filter(v => v <= 333333);
+        }
+        
+        // Tỷ lệ: số nhỏ chiếm 70%, số lớn chiếm 30%
+        pool.sort((a,b) => a - b);
+        const isBig = Math.random() > 0.7;
+        if (isBig && pool.length > 2) {
+            return pool[Math.floor(Math.random() * 2) + (pool.length - 2)];
+        }
+        return pool[Math.floor(Math.random() * (pool.length > 2 ? pool.length - 2 : pool.length))];
+    }
+
+    function initGame(mode) {
         const grid = document.getElementById('grid');
-        const title = document.getElementById('currentType');
         grid.innerHTML = '';
-        title.innerText = type === 'small' ? "Đang hiển thị: 🌸 Bao Lì Xì Lấy May" : "Đang hiển thị: 🌟 Bao Lì Xì May Mắn";
+        document.getElementById('gameStatus').innerText = mode === 'takeLuck' ? "🌸 Lì Xì Lấy May (10-100k)" : "🔥 Lì Xì May Mắn (88-555k)";
         
         for (let i = 0; i < 100; i++) {
-            const amount = generateAmount(type);
+            const amt = getLuckyAmount(mode);
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
                 <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back">${formatMoney(amount)}</div>
+                    <div class="card-front">🧧</div>
+                    <div class="card-back">${amt.toLocaleString()}đ</div>
                 </div>
             `;
             card.onclick = function() {
                 if (!this.classList.contains('flipped')) {
                     this.classList.add('flipped');
-                    showResult(amount);
+                    handleWin(amt);
                 }
             };
             grid.appendChild(card);
         }
-        // Hiệu ứng nhẹ khi đổi pack
-        window.scrollTo({ top: 400, behavior: 'smooth' });
     }
 
-    function formatMoney(n) {
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
-    }
-
-    function showResult(amt) {
-        totalMoney += amt;
-        totalPicks++;
-        
-        document.getElementById('winAmount').innerText = formatMoney(amt);
-        document.getElementById('count').innerText = totalPicks;
-        document.getElementById('total').innerText = formatMoney(totalMoney);
+    function handleWin(amt) {
+        globalPicks++;
+        globalTotal += amt;
+        document.getElementById('picks').innerText = globalPicks;
+        document.getElementById('total').innerText = globalTotal.toLocaleString() + 'đ';
         
         setTimeout(() => {
-            document.getElementById('resultOverlay').style.display = 'flex';
-            // Pháo hoa
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#ff6b81', '#feca57', '#ee5253']
-            });
-        }, 500);
+            document.getElementById('winAmount').innerText = amt.toLocaleString() + 'đ';
+            document.getElementById('resultPopup').style.display = 'block';
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffeb3b', '#ffffff', '#d32f2f'] });
+        }, 600);
     }
 
-    function closeResult() {
-        document.getElementById('resultOverlay').style.display = 'none';
+    function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
+
+    // Admin Logic
+    document.getElementById('horseBtn').onclick = function() {
+        clickCount++;
+        clearTimeout(clickTimer);
+        if (clickCount === 3) {
+            document.getElementById('adminModal').style.display = 'block';
+            clickCount = 0;
+        }
+        clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+    };
+
+    function verifyPass() {
+        if (document.getElementById('adminPass').value === "Test@12345") {
+            document.getElementById('adminPassArea').style.display = 'none';
+            document.getElementById('adminControls').style.display = 'block';
+        } else { alert("Sai mật khẩu!"); }
     }
 
-    // Khởi tạo lần đầu
-    window.onload = () => generatePack('small');
+    function saveSettings() {
+        const take = document.getElementById('customTakeLuck').value.split(',').map(v => parseInt(v.trim()));
+        const lucky = document.getElementById('customLucky').value.split(',').map(v => parseInt(v.trim()));
+        config.takeLuck = take;
+        config.lucky = lucky;
+        document.getElementById('adminModal').style.display = 'none';
+        alert("Đã lưu cấu hình mới!");
+    }
 
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('adminModal')) {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+    };
+
+    window.onload = () => {
+        createCoins();
+        initGame('takeLuck');
+    };
 </script>
 </body>
 </html>
