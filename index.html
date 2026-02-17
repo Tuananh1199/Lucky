@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lì Xì Tết 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -24,6 +24,7 @@
             padding-bottom: 50px;
         }
 
+        /* Đồng xu rơi */
         .coin {
             position: fixed; top: -50px; font-size: 18px; z-index: 0;
             pointer-events: none; animation: fall linear forwards;
@@ -33,15 +34,16 @@
         .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 2; padding: 10px; }
 
         .header {
-            text-align: center; padding: 15px; background: rgba(0,0,0,0.2);
-            border-radius: 15px; border: 2px solid var(--tet-gold); margin-bottom: 15px;
+            text-align: center; padding: 15px; background: rgba(0,0,0,0.3);
+            border-radius: 20px; border: 2px solid var(--tet-gold); margin-bottom: 15px;
         }
 
-        #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; }
+        #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; margin: 5px 0; }
 
-        .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        /* Grid 4 cột chuẩn */
+        .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
-        .card { aspect-ratio: 3/4.2; perspective: 1000px; }
+        .card { aspect-ratio: 3/4.5; perspective: 1000px; }
         .card-inner {
             position: relative; width: 100%; height: 100%;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -51,81 +53,92 @@
 
         .card-front, .card-back {
             position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255, 235, 59, 0.4);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            backface-visibility: hidden; border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1.5px solid var(--tet-gold);
         }
 
-        .card-front { background: var(--tet-red); position: relative; }
+        /* Mặt trước */
+        .card-front { background: var(--tet-red); box-shadow: inset 0 0 15px rgba(0,0,0,0.3); }
+        .card-front::before { content: "🧧"; font-size: 1.6rem; }
         
-        /* Dấu hiệu nhận biết bí mật */
-        .mode-high .card-front::after { content: ""; position: absolute; bottom: 4px; right: 4px; width: 3px; height: 3px; background: var(--tet-gold); border-radius: 50%; opacity: 0.6; }
-        .mode-low .card-front::after { content: ""; position: absolute; bottom: 4px; right: 4px; width: 3px; height: 3px; background: #5d0000; border-radius: 50%; opacity: 0.6; }
+        /* Dấu hiệu nhận biết bí mật (Chấm nhỏ ở góc) */
+        .mode-high .card-front::after { content: ""; position: absolute; bottom: 5px; right: 5px; width: 4px; height: 4px; background: var(--tet-gold); border-radius: 50%; opacity: 0.5; }
+        .mode-low .card-front::after { content: ""; position: absolute; bottom: 5px; right: 5px; width: 4px; height: 4px; background: #4a0000; border-radius: 50%; opacity: 0.5; }
 
-        .card-front::before { content: "🧧"; font-size: 1.4rem; }
-
+        /* MẶT SAU - FIX LỖI UI */
         .card-back {
-            background: #fff; color: var(--tet-red);
-            transform: rotateY(180deg); font-weight: 800;
-            font-size: 0.65rem; text-align: center; padding: 2px;
-            display: flex; flex-direction: column;
+            background: #ffffff; 
+            background-image: radial-gradient(#fff9c4 0.5px, transparent 0.5px);
+            background-size: 10px 10px;
+            color: var(--tet-red);
+            transform: rotateY(180deg);
+            padding: 5px;
         }
 
-        .stats { margin-top: 15px; text-align: center; font-size: 0.8rem; color: white; opacity: 0.8; }
+        .card-back .label { font-size: 0.5rem; font-weight: bold; opacity: 0.6; margin-bottom: 4px; color: #888; }
+        .card-back .amount { 
+            font-size: 0.75rem; /* Tăng size để dễ đọc */
+            font-weight: 900; 
+            word-break: break-all; 
+            line-height: 1.1;
+        }
 
+        .stats { margin-top: 20px; text-align: center; font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 50px; }
+
+        /* Popup */
         .result-popup {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #fff; border: 5px solid var(--tet-gold);
-            padding: 20px; border-radius: 20px; text-align: center;
+            background: #fff; border: 6px solid var(--tet-gold);
+            padding: 25px; border-radius: 25px; text-align: center;
             z-index: 3000; display: none; width: 85%; max-width: 320px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            box-shadow: 0 0 100px rgba(0,0,0,0.5);
         }
 
-        #winAmount { font-size: 2.2rem; color: var(--tet-red); font-weight: 900; margin: 10px 0; }
-        .btn-close { padding: 10px 30px; background: var(--tet-red); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        #winAmount { font-size: 2.5rem; color: var(--tet-red); font-weight: 900; margin: 15px 0; }
+        .btn-close { padding: 12px 35px; background: var(--tet-red); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
-        /* Hiệu ứng rung nhẹ cho bao lì xì chưa mở */
-        .card:not(.flipped) { animation: sway 3s ease-in-out infinite; }
-        @keyframes sway { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(1deg); } }
+        /* Animation cho bao lì xì chưa mở */
+        .card:not(.flipped) { animation: shake 4s ease-in-out infinite; }
+        @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(2deg); } 75% { transform: rotate(-2deg); } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div style="font-size: 2.5rem; cursor: pointer;" id="adminTrigger">🐴</div>
+        <div style="font-size: 2.8rem; cursor: pointer;" id="adminTrigger">🐴</div>
         <h1 id="secretTitle">Lì Xì Tết 2026</h1>
-        <p id="modeIndicator" style="font-size: 0.6rem; opacity: 0.3;">Túi Tài Lộc</p>
+        <p id="modeIndicator" style="font-size: 0.65rem; opacity: 0.4; letter-spacing: 1px; font-weight: bold;">TÚI TÀI LỘC</p>
     </div>
 
     <div class="cards-grid" id="grid"></div>
 
     <div class="stats">
-        Đã mở: <span id="picks">0</span> | Tổng tiền: <span id="total">0đ</span>
+        Lượt mở: <span id="picks">0</span> | Tổng tiền: <span id="total" style="color:var(--tet-gold)">0đ</span>
     </div>
 </div>
 
 <div class="result-popup" id="resultPopup">
-    <p style="color: #666; font-weight: bold;">🧧 Bạn nhận được lộc 🧧</p>
+    <p style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;">🧧 Chúc Mừng! 🧧</p>
     <div id="winAmount">0đ</div>
-    <button class="btn-close" onclick="closePopup()">Tuyệt vời!</button>
+    <button class="btn-close" onclick="closePopup()">NHẬN LỘC</button>
 </div>
 
 <div id="adminModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; padding:20px;">
-    <div style="background:white; padding:20px; border-radius:15px; max-width:400px; margin:auto; color:#333;">
-        <h3>Cấu hình hệ thống</h3>
-        <input type="password" id="adminPass" placeholder="Mật khẩu..." style="width:100%; padding:12px; margin:15px 0; border:1px solid #ccc;">
-        <button class="btn-close" style="width:100%" onclick="verifyAdmin()">Xác nhận</button>
+    <div style="background:white; padding:25px; border-radius:20px; max-width:350px; margin:15vh auto; color:#333; text-align:center;">
+        <h3 style="margin-bottom:15px">Quản trị viên</h3>
+        <input type="password" id="adminPass" placeholder="Nhập mật khẩu..." style="width:100%; padding:15px; margin-bottom:15px; border:2px solid #eee; border-radius:10px; font-size:1rem;">
+        <button class="btn-close" style="width:100%" onclick="verifyAdmin()">XÁC NHẬN</button>
     </div>
 </div>
 
 <script>
-    let currentMode = 'high'; // Mặc định là High
+    let currentMode = 'high'; // Mặc định là High (May mắn)
     let globalPicks = 0;
     let globalTotal = 0;
-    let titleClickCount = 0;
-    let adminClickCount = 0;
+    let titleClicks = 0;
+    let adminClicks = 0;
     
     const config = {
         low: [10000, 20000, 30000, 50000, 68000, 88000, 100000],
@@ -141,17 +154,18 @@
             coin.style.animationDuration = Math.random() * 3 + 2 + 's';
             document.body.appendChild(coin);
             setTimeout(() => coin.remove(), 5000);
-        }, 500);
+        }, 600);
     }
 
     function getAmount() {
         let pool = [...config[currentMode]];
+        // Logic chặn theo lượt mở như yêu cầu trước
         if (globalPicks < 5) pool = pool.filter(v => v < 250000);
         else if (globalPicks < 30) pool = pool.filter(v => v < 500000);
         
-        // Random có trọng số (số nhỏ xuất hiện nhiều hơn)
         pool.sort((a,b) => a - b);
-        let idx = Math.floor(Math.pow(Math.random(), 2) * pool.length);
+        // Tỷ lệ trúng số nhỏ cao hơn một chút
+        let idx = Math.floor(Math.pow(Math.random(), 1.5) * pool.length);
         return pool[idx];
     }
 
@@ -159,7 +173,7 @@
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         grid.className = `cards-grid mode-${currentMode}`;
-        document.getElementById('modeIndicator').innerText = currentMode === 'high' ? "Túi Tài Lộc" : "Túi Bình An";
+        document.getElementById('modeIndicator').innerText = currentMode === 'high' ? "TÚI TÀI LỘC" : "TÚI BÌNH AN";
 
         for (let i = 0; i < 100; i++) {
             const amt = getAmount();
@@ -169,8 +183,8 @@
                 <div class="card-inner">
                     <div class="card-front"></div>
                     <div class="card-back">
-                        <span style="font-size:0.5rem; opacity:0.5; margin-bottom:5px;">LỘC XUÂN</span>
-                        <span>${amt.toLocaleString()}đ</span>
+                        <div class="label">LỘC XUÂN</div>
+                        <div class="amount">${amt.toLocaleString()}đ</div>
                     </div>
                 </div>
             `;
@@ -184,18 +198,18 @@
         }
     }
 
-    // Nhấn 3 lần vào Title để đổi loại
+    // Nhấn 3 lần vào Title để đổi loại (Logic ẩn)
     document.getElementById('secretTitle').onclick = function() {
-        titleClickCount++;
-        if (titleClickCount === 3) {
+        titleClicks++;
+        if (titleClicks === 3) {
             currentMode = (currentMode === 'high') ? 'low' : 'high';
             renderGrid();
-            titleClickCount = 0;
-            // Hiệu ứng nháy nhẹ để nhận biết
-            this.style.opacity = "0.5";
-            setTimeout(() => this.style.opacity = "1", 200);
+            titleClicks = 0;
+            // Hiệu ứng nháy nhẹ tiêu đề để xác nhận đổi thành công
+            this.style.color = "#fff";
+            setTimeout(() => this.style.color = "var(--tet-gold)", 300);
         }
-        setTimeout(() => titleClickCount = 0, 1000);
+        setTimeout(() => titleClicks = 0, 1000);
     };
 
     function handlePick(amt) {
@@ -207,27 +221,28 @@
         setTimeout(() => {
             document.getElementById('winAmount').innerText = amt.toLocaleString() + 'đ';
             document.getElementById('resultPopup').style.display = 'block';
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffeb3b', '#d32f2f'] });
-        }, 500);
+            // Bắn pháo hoa giấy
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffeb3b', '#d32f2f', '#ffffff'] });
+        }, 600);
     }
 
     function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
 
-    // Admin Modal (Click 3 lần vào ngựa)
+    // Admin Password (Click 3 lần vào Ngựa)
     document.getElementById('adminTrigger').onclick = function() {
-        adminClickCount++;
-        if (adminClickCount === 3) {
+        adminClicks++;
+        if (adminClicks === 3) {
             document.getElementById('adminModal').style.display = 'block';
-            adminClickCount = 0;
+            adminClicks = 0;
         }
-        setTimeout(() => adminClickCount = 0, 1000);
+        setTimeout(() => adminClicks = 0, 1000);
     };
 
     function verifyAdmin() {
         if (document.getElementById('adminPass').value === "Test@12345") {
-            alert("Chế độ hiện tại: " + currentMode.toUpperCase());
+            alert("ĐANG Ở CHẾ ĐỘ: " + currentMode.toUpperCase());
             document.getElementById('adminModal').style.display = 'none';
-        } else { alert("Sai mật khẩu!"); }
+        } else { alert("Mật khẩu không đúng!"); }
     }
 
     window.onload = () => { createCoins(); renderGrid(); };
