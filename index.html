@@ -11,14 +11,24 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Lexend', sans-serif; background: var(--dark-red); color: var(--tet-gold); min-height: 100vh; overflow-x: hidden; padding-bottom: 50px; }
         
+        /* Màn hình Coming Soon khóa web */
+        #comingSoonOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark-red);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; text-align: center; padding: 20px;
+        }
+        .cs-title { font-family: 'Pacifico', cursive; font-size: 2.5rem; margin-bottom: 10px; }
+        .cs-sub { font-size: 1rem; opacity: 0.7; letter-spacing: 2px; }
+
         .coin { position: fixed; top: -50px; font-size: 18px; z-index: 0; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
         .container { max-width: 500px; margin: 0 auto; position: relative; z-index: 2; padding: 10px; }
         .header { text-align: center; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 20px; border: 2px solid var(--tet-gold); margin-bottom: 15px; }
         #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; margin: 5px 0; }
+        #adminTrigger { position: relative; z-index: 10000; } /* Đảm bảo con ngựa luôn bấm được */
 
-        /* Dòng chữ chế độ - Nơi đặt Cheat */
         #modeIndicator { font-size: 0.65rem; opacity: 0.8; letter-spacing: 2px; font-weight: bold; cursor: pointer; transition: all 0.2s; padding: 5px; display: inline-block; }
 
         .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -39,6 +49,12 @@
     </style>
 </head>
 <body>
+
+<div id="comingSoonOverlay">
+    <div class="cs-title">Sự Kiện Tết 2026</div>
+    <div class="cs-sub">COMING SOON...</div>
+    <p style="margin-top: 30px; font-size: 0.7rem; opacity: 0.5;">Vui lòng quay lại sau</p>
+</div>
 
 <div class="container">
     <div class="header">
@@ -61,6 +77,8 @@
     let globalPicks = 0;
     let globalTotal = 0;
     let cheatClicks = 0;
+    let hideClicks = 0;
+    let titleClicks = 0;
     let isCheatActive = false;
 
     let configData = {
@@ -73,8 +91,8 @@
         ]
     };
 
+    // Logic lấy số tiền (Sửa lỗi 5 lượt đầu)
     function getAmount() {
-        // KIỂM TRA CHEAT
         if (isCheatActive) {
             isCheatActive = false; 
             const cheatPool = [333333, 363636, 444444];
@@ -82,8 +100,7 @@
         }
 
         if (currentMode === 'high') {
-            // 5 lượt đầu tỷ lệ đều cho các số nhỏ
-            if (globalPicks < 0) {
+            if (globalPicks < 5) {
                 const startValues = [88888, 99999, 123123, 123456, 168168, 168000];
                 return startValues[Math.floor(Math.random() * startValues.length)];
             } 
@@ -131,24 +148,30 @@
         }, 600);
     }
 
-    // THAO TÁC ẨN: Bấm 3 lần vào dòng TÚI TÀI LỘC
+    // PHÍM TẮT: Bấm 3 lần con ngựa 🐴 để Ẩn/Hiện web
+    document.getElementById('adminTrigger').onclick = function() {
+        hideClicks++;
+        if (hideClicks === 3) {
+            const overlay = document.getElementById('comingSoonOverlay');
+            overlay.style.display = (overlay.style.display === 'none') ? 'flex' : 'none';
+            hideClicks = 0;
+        }
+        setTimeout(() => { hideClicks = 0; }, 1000);
+    };
+
+    // CHEAT: Bấm 3 lần vào dòng TÚI TÀI LỘC
     document.getElementById('modeIndicator').onclick = function() {
         cheatClicks++;
         if (cheatClicks === 3) {
             isCheatActive = true;
             cheatClicks = 0;
-            // Xác nhận ngầm bằng cách đổi màu chữ nhẹ
             this.style.color = "var(--tet-gold)";
-            this.style.textShadow = "0 0 10px var(--tet-gold)";
-            setTimeout(() => {
-                this.style.color = "white";
-                this.style.textShadow = "none";
-            }, 500);
+            setTimeout(() => { this.style.color = "white"; }, 500);
         }
-        setTimeout(() => { if (cheatClicks > 0) cheatClicks = 0; }, 2000);
+        setTimeout(() => { cheatClicks = 0; }, 2000);
     };
 
-    // Chuyển Mode (Bấm 3 lần Title "Lì Xì Tết 2026")
+    // Đổi Mode (Bấm 3 lần Title)
     document.getElementById('secretTitle').onclick = function() {
         titleClicks++;
         if (titleClicks === 3) {
