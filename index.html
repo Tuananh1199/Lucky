@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lì Xì Tết Bính Ngọ 2026</title>
+    <title>Lì Xì Tết 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -18,7 +18,6 @@
             padding-bottom: 50px; 
         }
         
-        /* Hiệu ứng xu rơi nền */
         .coin { position: fixed; top: -50px; font-size: 18px; z-index: 0; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
@@ -29,11 +28,9 @@
             border-radius: 20px; 
             border: 2px solid var(--tet-gold); 
             margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; margin: 5px 0; }
 
-        /* Grid Bao Lì Xì */
         .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .card { aspect-ratio: 3/4.5; perspective: 1000px; cursor: pointer; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
@@ -49,30 +46,26 @@
         .card-front::before { content: "🧧"; font-size: 1.6rem; }
         
         .card-back { background: #ffffff; color: var(--tet-red); transform: rotateY(180deg); padding: 5px; text-align: center; }
-        .card-back .label { font-size: 0.5rem; font-weight: bold; opacity: 0.6; margin-bottom: 4px; color: #888; }
-        .card-back .amount { font-size: 0.7rem; font-weight: 900; word-break: break-all; line-height: 1.1; }
+        .card-back .amount { font-size: 0.7rem; font-weight: 900; }
 
         .stats { 
             margin-top: 20px; text-align: center; font-size: 0.85rem; 
             background: rgba(0,0,0,0.6); padding: 12px; border-radius: 50px;
-            border: 1px solid rgba(255,235,59,0.3);
         }
         
-        /* Popup kết quả */
         .result-popup { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             background: #fff; border: 6px solid var(--tet-gold); padding: 25px; 
             border-radius: 25px; text-align: center; z-index: 3000; display: none; 
-            width: 85%; max-width: 320px; box-shadow: 0 0 100px rgba(0,0,0,0.8); 
+            width: 85%; max-width: 320px; 
         }
         #winAmount { font-size: 2.2rem; color: var(--tet-red); font-weight: 900; margin: 15px 0; }
         .btn-red { 
             padding: 12px 35px; background: var(--tet-red); color: white; 
             border: none; border-radius: 50px; font-weight: 700; cursor: pointer; 
-            width: 100%; margin-top: 10px; box-shadow: 0 4px 0 #8e0000;
+            width: 100%; margin-top: 10px; 
         }
 
-        /* Modal Admin */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; padding: 20px; }
         .modal-content { background: white; color: #333; padding: 20px; border-radius: 20px; max-width: 450px; margin: 0 auto; }
     </style>
@@ -83,7 +76,7 @@
     <div class="header">
         <div style="font-size: 2.8rem; cursor: pointer;" id="adminTrigger">🐴</div>
         <h1 id="secretTitle">Lì Xì Tết 2026</h1>
-        <p id="modeIndicator" style="font-size: 0.65rem; opacity: 0.6; letter-spacing: 2px; font-weight: bold; color: white;">TÚI TÀI LỘC</p>
+        <p id="modeIndicator" style="font-size: 0.65rem; opacity: 0.6; letter-spacing: 2px; font-weight: bold;">TÚI TÀI LỘC</p>
     </div>
     <div class="cards-grid" id="grid"></div>
     <div class="stats">
@@ -93,17 +86,17 @@
 </div>
 
 <div class="result-popup" id="resultPopup">
-    <p style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;">🧧 Chúc Mừng Bạn! 🧧</p>
+    <p style="color: #d32f2f; font-weight: bold;">🧧 Chúc Mừng Bạn! 🧧</p>
     <div id="winAmount">0đ</div>
     <button class="btn-red" onclick="closePopup()">NHẬN LỘC</button>
 </div>
 
 <div id="adminModal" class="modal">
     <div class="modal-content">
-        <h2 style="text-align:center; color:var(--tet-red)">Cài Đặt Hệ Thống</h2>
-        <input type="password" id="adminPass" placeholder="Nhập mã quản trị" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
+        <h2 style="text-align:center; color:var(--tet-red)">Quản Trị</h2>
+        <input type="password" id="adminPass" placeholder="Mật khẩu" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
         <button class="btn-red" onclick="verifyAdmin()">Xác Nhận</button>
-        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Thoát</button>
+        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Đóng</button>
     </div>
 </div>
 
@@ -114,73 +107,62 @@
     let titleClicks = 0;
     let adminClicks = 0;
 
-    // Cấu hình danh sách tiền và tỷ lệ (%)
     let configData = {
-        low: [
-            {amt: 11111, p: 20}, {amt: 22222, p: 20}, {amt: 33333, p: 20}, {amt: 55555, p: 20}, {amt: 68686, p: 20}
-        ],
+        low: [{amt: 11111, p: 20}, {amt: 22222, p: 20}, {amt: 33333, p: 20}, {amt: 55555, p: 20}, {amt: 68686, p: 20}],
         high: [
-            // NHÓM ƯU TIÊN (Mặc định xuất hiện nhiều và bắt buộc cho 5 lượt đầu)
             {amt: 88888, p: 15}, 
             {amt: 99999, p: 10}, 
-            {amt: 123123, p: 25}, // Tỉ lệ cao nhất
+            {amt: 123123, p: 25}, 
             {amt: 123456, p: 10}, 
-            {amt: 168168, p: 20}, // Tỉ lệ cao nhì
+            {amt: 168168, p: 20}, 
             {amt: 168000, p: 5},
-            
-            // NHÓM MỞ KHÓA SAU (Sau 5 và 20 lượt)
             {amt: 222222, p: 5},
-            {amt: 333333, p: 5}, // > 250k
-            {amt: 456456, p: 3}, // > 250k
-            {amt: 555555, p: 2}  // Jackpot
+            {amt: 333333, p: 5}, 
+            {amt: 456456, p: 3}, 
+            {amt: 555555, p: 2}
         ]
     };
 
     function getAmount() {
-        let pool = [...configData[currentMode]];
-        
         if (currentMode === 'high') {
-            // KHỐI CHẶN 5 LƯỢT ĐẦU: Chỉ lấy các số bạn yêu cầu
+            // LOGIC CHIA ĐỀU TỶ LỆ TRONG 5 LƯỢT ĐẦU
             if (globalPicks < 5) {
                 const startValues = [88888, 99999, 123123, 123456, 168168, 168000];
-                pool = pool.filter(item => startValues.includes(item.amt));
+                // Chọn ngẫu nhiên 1 phần tử trong mảng (tỷ lệ 1/6 cho mỗi số)
+                return startValues[Math.floor(Math.random() * startValues.length)];
             } 
-            // KHỐI CHẶN LƯỢT 5 ĐẾN 19: Loại bỏ Jackpot 555,555
-            else if (globalPicks < 20) {
-                pool = pool.filter(item => item.amt < 500000);
+            
+            // LOGIC TỪ LƯỢT 5 ĐẾN 19
+            let pool = configData.high.filter(item => item.amt < 500000);
+            
+            // LOGIC SAU LƯỢT 20
+            if (globalPicks >= 20) {
+                pool = configData.high;
             }
-            // Lượt 20 trở đi: Mở full bể (bao gồm 555,555)
-        }
 
-        // Tính toán xác suất dựa trên pool hiện tại
-        const totalP = pool.reduce((sum, item) => sum + item.p, 0);
-        const rand = Math.random() * totalP;
-        let cumulative = 0;
-
-        for (let item of pool) {
-            cumulative += item.p;
-            if (rand <= cumulative) return item.amt;
+            // Tính toán theo xác suất p
+            const totalP = pool.reduce((sum, item) => sum + item.p, 0);
+            const rand = Math.random() * totalP;
+            let cumulative = 0;
+            for (let item of pool) {
+                cumulative += item.p;
+                if (rand <= cumulative) return item.amt;
+            }
         }
-        return pool[0].amt;
+        
+        // Mode Low
+        const lowPool = configData.low;
+        return lowPool[Math.floor(Math.random() * lowPool.length)].amt;
     }
 
     function renderGrid() {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         document.getElementById('modeIndicator').innerText = currentMode === 'high' ? "TÚI TÀI LỘC" : "TÚI BÌNH AN";
-
         for (let i = 0; i < 100; i++) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front"></div>
-                    <div class="card-back">
-                        <div class="label">LỘC XUÂN</div>
-                        <div class="amount">?</div>
-                    </div>
-                </div>`;
-            
+            card.innerHTML = `<div class="card-inner"><div class="card-front"></div><div class="card-back"><div class="amount">?</div></div></div>`;
             card.onclick = function() {
                 if (!this.classList.contains('flipped')) {
                     const finalAmt = getAmount();
@@ -198,32 +180,25 @@
         globalTotal += amt;
         document.getElementById('picks').innerText = globalPicks;
         document.getElementById('total').innerText = globalTotal.toLocaleString() + 'đ';
-        
         setTimeout(() => {
             document.getElementById('winAmount').innerText = amt.toLocaleString() + 'đ';
             document.getElementById('resultPopup').style.display = 'block';
-            confetti({ 
-                particleCount: 150, spread: 70, origin: { y: 0.6 },
-                colors: ['#ffeb3b', '#d32f2f', '#ffffff']
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         }, 600);
     }
 
     function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
 
-    // Đổi chế độ bí mật (Bấm 3 lần tiêu đề)
     document.getElementById('secretTitle').onclick = function() {
         titleClicks++;
         if (titleClicks === 3) {
             currentMode = (currentMode === 'high') ? 'low' : 'high';
             renderGrid();
             titleClicks = 0;
-            alert("Đã chuyển sang: " + currentMode.toUpperCase());
         }
         setTimeout(() => titleClicks = 0, 1000);
     };
 
-    // Mở Admin bí mật (Bấm 3 lần con ngựa)
     document.getElementById('adminTrigger').onclick = function() {
         adminClicks++;
         if (adminClicks === 3) { document.getElementById('adminModal').style.display = 'block'; adminClicks = 0; }
@@ -232,9 +207,8 @@
 
     function verifyAdmin() {
         if (document.getElementById('adminPass').value === "Test@12345") {
-            alert("Xác thực quản trị viên thành công!");
             location.reload(); 
-        } else { alert("Mật khẩu không đúng!"); }
+        } else { alert("Sai mật khẩu!"); }
     }
 
     function createCoins() {
