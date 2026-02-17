@@ -18,6 +18,7 @@
             padding-bottom: 50px; 
         }
         
+        /* Hiệu ứng xu rơi nền */
         .coin { position: fixed; top: -50px; font-size: 18px; z-index: 0; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
@@ -32,8 +33,9 @@
         }
         #secretTitle { cursor: pointer; user-select: none; font-family: 'Pacifico', cursive; font-size: 1.8rem; margin: 5px 0; }
 
+        /* Grid Bao Lì Xì */
         .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .card { aspect-ratio: 3/4.5; perspective: 1000px; }
+        .card { aspect-ratio: 3/4.5; perspective: 1000px; cursor: pointer; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
         .card.flipped .card-inner { transform: rotateY(180deg); }
 
@@ -56,6 +58,7 @@
             border: 1px solid rgba(255,235,59,0.3);
         }
         
+        /* Popup kết quả */
         .result-popup { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             background: #fff; border: 6px solid var(--tet-gold); padding: 25px; 
@@ -69,7 +72,7 @@
             width: 100%; margin-top: 10px; box-shadow: 0 4px 0 #8e0000;
         }
 
-        /* Admin */
+        /* Modal Admin */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 4000; padding: 20px; }
         .modal-content { background: white; color: #333; padding: 20px; border-radius: 20px; max-width: 450px; margin: 0 auto; }
     </style>
@@ -90,17 +93,17 @@
 </div>
 
 <div class="result-popup" id="resultPopup">
-    <p style="color: #d32f2f; font-weight: bold;">🧧 Chúc Mừng! 🧧</p>
+    <p style="color: #d32f2f; font-weight: bold; font-size: 1.1rem;">🧧 Chúc Mừng Bạn! 🧧</p>
     <div id="winAmount">0đ</div>
     <button class="btn-red" onclick="closePopup()">NHẬN LỘC</button>
 </div>
 
 <div id="adminModal" class="modal">
     <div class="modal-content">
-        <h2 style="text-align:center; color:var(--tet-red)">Quản Trị</h2>
-        <input type="password" id="adminPass" placeholder="Mật khẩu" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
-        <button class="btn-red" onclick="verifyAdmin()">Vào Hệ Thống</button>
-        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Đóng</button>
+        <h2 style="text-align:center; color:var(--tet-red)">Cài Đặt Hệ Thống</h2>
+        <input type="password" id="adminPass" placeholder="Nhập mã quản trị" style="width:100%; padding:15px; margin:20px 0; border:1px solid #ddd; border-radius:10px;">
+        <button class="btn-red" onclick="verifyAdmin()">Xác Nhận</button>
+        <button class="btn-red" style="background:#666" onclick="document.getElementById('adminModal').style.display='none'">Thoát</button>
     </div>
 </div>
 
@@ -111,23 +114,25 @@
     let titleClicks = 0;
     let adminClicks = 0;
 
-    // Cấu hình chính
+    // Cấu hình danh sách tiền và tỷ lệ (%)
     let configData = {
         low: [
             {amt: 11111, p: 20}, {amt: 22222, p: 20}, {amt: 33333, p: 20}, {amt: 55555, p: 20}, {amt: 68686, p: 20}
         ],
         high: [
-            // Các giá trị bắt buộc 5 lượt đầu
+            // NHÓM ƯU TIÊN (Mặc định xuất hiện nhiều và bắt buộc cho 5 lượt đầu)
+            {amt: 88888, p: 15}, 
             {amt: 99999, p: 10}, 
-            {amt: 123123, p: 25}, 
+            {amt: 123123, p: 25}, // Tỉ lệ cao nhất
             {amt: 123456, p: 10}, 
-            {amt: 168168, p: 20}, 
+            {amt: 168168, p: 20}, // Tỉ lệ cao nhì
             {amt: 168000, p: 5},
-            // Các giá trị mở sau
-            {amt: 222222, p: 10},
-            {amt: 333333, p: 10}, // Mở sau 5 lượt
-            {amt: 456456, p: 5},  // Mở sau 5 lượt
-            {amt: 555555, p: 5}   // Mở sau 20 lượt
+            
+            // NHÓM MỞ KHÓA SAU (Sau 5 và 20 lượt)
+            {amt: 222222, p: 5},
+            {amt: 333333, p: 5}, // > 250k
+            {amt: 456456, p: 3}, // > 250k
+            {amt: 555555, p: 2}  // Jackpot
         ]
     };
 
@@ -135,17 +140,19 @@
         let pool = [...configData[currentMode]];
         
         if (currentMode === 'high') {
+            // KHỐI CHẶN 5 LƯỢT ĐẦU: Chỉ lấy các số bạn yêu cầu
             if (globalPicks < 5) {
-                // CHỈ cho phép nhận 5 giá trị này trong 5 lượt đầu
-                const startValues = [99999, 123123, 123456, 168168, 168000];
+                const startValues = [88888, 99999, 123123, 123456, 168168, 168000];
                 pool = pool.filter(item => startValues.includes(item.amt));
-            } else if (globalPicks < 20) {
-                // Từ lượt 5 - 19: Xuất hiện thêm các số > 250k, nhưng chưa có 555,555
+            } 
+            // KHỐI CHẶN LƯỢT 5 ĐẾN 19: Loại bỏ Jackpot 555,555
+            else if (globalPicks < 20) {
                 pool = pool.filter(item => item.amt < 500000);
             }
-            // Sau 20 lượt: Xuất hiện tất cả bao gồm 555,555
+            // Lượt 20 trở đi: Mở full bể (bao gồm 555,555)
         }
 
+        // Tính toán xác suất dựa trên pool hiện tại
         const totalP = pool.reduce((sum, item) => sum + item.p, 0);
         const rand = Math.random() * totalP;
         let cumulative = 0;
@@ -195,25 +202,28 @@
         setTimeout(() => {
             document.getElementById('winAmount').innerText = amt.toLocaleString() + 'đ';
             document.getElementById('resultPopup').style.display = 'block';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffeb3b', '#d32f2f'] });
+            confetti({ 
+                particleCount: 150, spread: 70, origin: { y: 0.6 },
+                colors: ['#ffeb3b', '#d32f2f', '#ffffff']
+            });
         }, 600);
     }
 
     function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
 
-    // Click 3 lần Title để đổi Mode
+    // Đổi chế độ bí mật (Bấm 3 lần tiêu đề)
     document.getElementById('secretTitle').onclick = function() {
         titleClicks++;
         if (titleClicks === 3) {
             currentMode = (currentMode === 'high') ? 'low' : 'high';
             renderGrid();
             titleClicks = 0;
-            alert("Đổi sang: " + currentMode.toUpperCase());
+            alert("Đã chuyển sang: " + currentMode.toUpperCase());
         }
         setTimeout(() => titleClicks = 0, 1000);
     };
 
-    // Click 3 lần icon Ngựa để mở Admin
+    // Mở Admin bí mật (Bấm 3 lần con ngựa)
     document.getElementById('adminTrigger').onclick = function() {
         adminClicks++;
         if (adminClicks === 3) { document.getElementById('adminModal').style.display = 'block'; adminClicks = 0; }
@@ -222,9 +232,9 @@
 
     function verifyAdmin() {
         if (document.getElementById('adminPass').value === "Test@12345") {
-            alert("Xác thực thành công! Bạn có thể xem log hoặc reset.");
+            alert("Xác thực quản trị viên thành công!");
             location.reload(); 
-        } else { alert("Sai mật khẩu!"); }
+        } else { alert("Mật khẩu không đúng!"); }
     }
 
     function createCoins() {
